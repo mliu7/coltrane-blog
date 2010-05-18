@@ -6,6 +6,8 @@ from markdown import markdown
 from tagging.fields import TagField, Tag
 import tagging
 
+import pdb
+
 class Category(models.Model):
     title = models.CharField(max_length=250, help_text='Maximum 250 characters.')
     slug = models.SlugField(unique=True, help_text="Suggested value automatically generated from title. Must be unique.")
@@ -21,7 +23,8 @@ class Category(models.Model):
     
     def __unicode__(self):
         return self.title
-    
+  
+
     @models.permalink
     def get_absolute_url(self):
         return ('coltrane_category_detail', (), { 'slug': self.slug })
@@ -64,8 +67,8 @@ class Entry(models.Model):
     tags = TagField()
     
     # Need to be this way around so that non-live entries will show up in Admin, which uses the default (first) manager.
-    objects = models.Manager()
     live = LiveEntryManager()
+    objects = models.Manager()
     
     class Meta:
         ordering = ['-pub_date']
@@ -73,7 +76,7 @@ class Entry(models.Model):
 
     def __unicode__(self):
         return self.title
-    
+
     def save(self, force_insert=False, force_update=False):
         self.body_html = markdown(self.body)
         if self.excerpt:
@@ -105,6 +108,7 @@ class Link(models.Model):
     title = models.CharField(max_length=250)
     
     # The actual link bits.
+    categories = models.ManyToManyField(Category)
     description = models.TextField(blank=True)
     description_html = models.TextField(editable=False, blank=True)
     via_name = models.CharField('Via', max_length=250, blank=True, help_text='The name of the person whose site you spotted the link on. Optional.')
