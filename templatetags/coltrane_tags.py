@@ -1,5 +1,6 @@
 from django.db.models import get_model
 from django import template
+import pdb
 
 from coltrane.models import Category
 
@@ -11,10 +12,21 @@ class CategoriesForModelNode(template.Node):
         self.varname = varname
         self.counts = counts
     def render(self, context):
-        manager = self.model._default_manager
-        if self.model.__name__ == 'Entry':
-            manager = self.model.live
-        context[self.varname] = manager.all()
+        model = self.model
+        categories = Category.objects.all()
+        categories_list = []
+        for category in categories:
+            if self.counts:
+                category.count = category.count_for_model(model)
+            categories_list.append(category)
+        context[self.varname] = categories_list
+
+        #manager = self.model._default_manager
+        #if self.model.__name__ == 'Entry':
+        #    manager = self.model.live
+        #context[self.varname] = manager.all()
+        #pdb.set_trace()
+
         return ''
 
 class LatestContentNode(template.Node):

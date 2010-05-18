@@ -1,12 +1,13 @@
 import datetime
+import pdb
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+
 from markdown import markdown
 from tagging.fields import TagField, Tag
 import tagging
-
-import pdb
 
 class Category(models.Model):
     title = models.CharField(max_length=250, help_text='Maximum 250 characters.')
@@ -16,7 +17,12 @@ class Category(models.Model):
     def live_entry_set(self):
         from coltrane.models import Entry
         return self.entry_set.filter(status=Entry.LIVE_STATUS)
-        
+
+    def count_for_model(self, model):
+        """Returns the number of objects of a certain model that use this category"""
+        manager = model._default_manager
+        return manager.filter(categories=self).count()
+
     class Meta: 
         ordering = ['title']
         verbose_name_plural = "Categories"
@@ -24,7 +30,6 @@ class Category(models.Model):
     def __unicode__(self):
         return self.title
   
-
     @models.permalink
     def get_absolute_url(self):
         return ('coltrane_category_detail', (), { 'slug': self.slug })
