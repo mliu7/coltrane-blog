@@ -20,13 +20,6 @@ class CategoriesForModelNode(template.Node):
                 category.count = category.count_for_model(model)
             categories_list.append(category)
         context[self.varname] = categories_list
-
-        #manager = self.model._default_manager
-        #if self.model.__name__ == 'Entry':
-        #    manager = self.model.live
-        #context[self.varname] = manager.all()
-        #pdb.set_trace()
-
         return ''
 
 class LatestContentNode(template.Node):

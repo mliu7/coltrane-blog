@@ -18,10 +18,22 @@ class Category(models.Model):
         from coltrane.models import Entry
         return self.entry_set.filter(status=Entry.LIVE_STATUS)
 
+    def link_set(self):
+        from coltrane.models import Link
+        return self.link_set.all()
+
     def count_for_model(self, model):
         """Returns the number of objects of a certain model that use this category"""
         manager = model._default_manager
         return manager.filter(categories=self).count()
+
+    @models.permalink
+    def get_absolute_entries_url(self):
+        return ('coltrane_entry_category_detail', (), { 'slug': self.slug })
+    
+    @models.permalink
+    def get_absolute_links_url(self):
+        return ('coltrane_link_category_detail', (), { 'slug': self.slug })
 
     class Meta: 
         ordering = ['title']
