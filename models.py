@@ -18,7 +18,7 @@ class Category(models.Model):
         from coltrane.models import Entry
         return self.entry_set.filter(status=Entry.LIVE_STATUS)
 
-    def link_set(self):
+    def get_link_set(self):
         from coltrane.models import Link
         return self.link_set.all()
 

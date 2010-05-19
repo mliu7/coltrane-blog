@@ -17,6 +17,7 @@ def entry_category_detail(request, slug):
 
 def link_category_detail(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    return object_list(request, queryset=self.link_set(), extra_context={
+
+    return object_list(request, queryset=category.get_link_set(), extra_context={
         'category': category
     })
