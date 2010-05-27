@@ -12,15 +12,15 @@ class LatestEntriesFeed(Feed):
     author_name = "Mark Liu"
     #copyright = "http://%s/about/copyright/" % current_site.domain
     description = "Latest entries posted to %s" % current_site.name
-    description_template = "coltrane/feeds/entries_description.html"
+    description_template = "coltrane/feeds/latest_description.html"
     subtitle = "Latest entries posted to %s" % current_site.name
     feed_type = Rss201rev2Feed
     #item_copyright = "http://%s/about/copyright/" % current_site.domain
     item_author_name = "Mark Liu"
     item_author_link = "http://%s/" % current_site.domain
-    link = "/feeds/entries/"
+    link = "/feeds/latest/"
     title = "%s: Latest entries" % current_site.name
-    title_template = "coltrane/feeds/entries_title"
+    title_template = "coltrane/feeds/latest_title.html"
     
     def items(self):
         return Entry.live.all()[:15]
