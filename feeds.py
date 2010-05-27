@@ -1,25 +1,30 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.feedgenerator import Atom1Feed
+from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
 from django.contrib.sites.models import Site
 from django.contrib.syndication.feeds import Feed
 from coltrane.models import Category, Entry, Link
+import pdb
 
 current_site = Site.objects.get_current()
 
+
 class LatestEntriesFeed(Feed):
-    author_name = "Bob Smith"
-    copyright = "http://%s/about/copyright/" % current_site.domain
+    author_name = "Mark Liu"
+    #copyright = "http://%s/about/copyright/" % current_site.domain
     description = "Latest entries posted to %s" % current_site.name
-    feed_type = Atom1Feed
-    item_copyright = "http://%s/about/copyright/" % current_site.domain
-    item_author_name = "Bob Smith"
+    description_template = "coltrane/feeds/entries_description.html"
+    subtitle = "Latest entries posted to %s" % current_site.name
+    feed_type = Rss201rev2Feed
+    #item_copyright = "http://%s/about/copyright/" % current_site.domain
+    item_author_name = "Mark Liu"
     item_author_link = "http://%s/" % current_site.domain
     link = "/feeds/entries/"
     title = "%s: Latest entries" % current_site.name
+    title_template = "coltrane/feeds/entries_title"
     
     def items(self):
         return Entry.live.all()[:15]
-    
+
     def item_pubdate(self, item):
         return item.pub_date
     
@@ -31,12 +36,12 @@ class LatestEntriesFeed(Feed):
 
 
 class LatestLinksFeed(Feed):
-    author_name = "Bob Smith"
+    author_name = "Mark Liu"
     copyright = "http://%s/about/copyright/" % current_site.domain
     description = "Latest entries posted to %s" % current_site.name
     feed_type = Atom1Feed
     item_copyright = "http://%s/about/copyright/" % current_site.domain
-    item_author_name = "Bob Smith"
+    item_author_name = "Mark Liu"
     item_author_link = "http://%s/" % current_site.domain
     link = "/feeds/links/"
     title = "%s: Latest links" % current_site.name
