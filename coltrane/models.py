@@ -64,7 +64,7 @@ class Entry(models.Model):
     
     # Core fields.
     title = models.CharField(max_length=250)
-    excerpt = models.TextField(blank=True)
+    excerpt = models.TextField(editable=False, blank=True)
     body = models.TextField()
     pub_date = models.DateTimeField(default=datetime.datetime.now)
 
