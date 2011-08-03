@@ -4,6 +4,7 @@ import pdb
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.defaultfilters import slugify
 
 from markdown import markdown
 from tagging.fields import TagField, Tag
@@ -65,12 +66,12 @@ class Entry(models.Model):
     # Core fields.
     title = models.CharField(max_length=250)
     excerpt = models.TextField(editable=False, blank=True)
-    body = models.TextField()
+    body = models.TextField(editable=False)
     pub_date = models.DateTimeField(default=datetime.datetime.now)
 
     # Fields to store generated HTML.
     excerpt_html = models.TextField(editable=False, blank=True)
-    body_html = models.TextField(editable=False, blank=True)
+    body_html = models.TextField(blank=True)
 
     # Metadata.
     author = models.ForeignKey(User)
@@ -95,9 +96,7 @@ class Entry(models.Model):
         return self.title
 
     def save(self, force_insert=False, force_update=False):
-        self.body_html = markdown(self.body)
-        if self.excerpt:
-            self.excerpt_html = markdown(self.excerpt)
+        self.slug = slugify(self.title)
         super(Entry, self).save(force_insert, force_update)
     
     
