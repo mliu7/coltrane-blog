@@ -1,9 +1,13 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.feedgenerator import Atom1Feed, Rss201rev2Feed
 from django.contrib.sites.models import Site
-from django.contrib.syndication.feeds import Feed
+try:
+    from django.contrib.syndication.feeds import Feed # For old versions of django
+except ImportError:
+    from django.contrib.syndication.views import Feed
+
 from coltrane.models import Category, Entry, Link
-import pdb
+
 
 current_site = Site.objects.get_current()
 
@@ -61,10 +65,11 @@ class LatestLinksFeed(Feed):
 
 # Page 144 in Practical Django Projects 2nd ed
 class CategoryFeed(LatestEntriesFeed):
-    def get_object(self, bits):
-        if len(bits) != 1:
+    def get_object(self, *args, **kwargs):
+        category_name = kwargs.get('category_name')
+        if not category_name:
             raise ObjectDoesNotExist
-        return Category.objects.get(slug__exact=bits[0])
+        return Category.objects.get(slug__exact=category_name)
     
     def title(self, obj):
         return "%s: Latest entries in category '%s'" % (current_site.name, obj.title)
@@ -77,4 +82,3 @@ class CategoryFeed(LatestEntriesFeed):
     
     def items(self, obj):
         return obj.live_entry_set()[:15]
-    
