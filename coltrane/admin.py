@@ -14,7 +14,8 @@ class EntryAdminForm(forms.ModelForm):
     class Meta:
         model = Entry
         widgets = {
-            'categories': forms.SelectMultiple(attrs={'size': 6})
+            'categories': forms.SelectMultiple(attrs={'size': 6}),
+            'body_html': forms.Textarea(attrs={'rows': 60, 'cols': 120})
         }
 
 
