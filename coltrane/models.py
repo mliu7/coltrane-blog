@@ -97,6 +97,8 @@ class Entry(models.Model):
 
     def save(self, force_insert=False, force_update=False):
         self.slug = slugify(self.title)
+        if len(self.slug) > 50:
+            self.slug = self.slug[0:49]
         super(Entry, self).save(force_insert, force_update)
     
     
