@@ -65,8 +65,7 @@ class LatestLinksFeed(Feed):
 
 # Page 144 in Practical Django Projects 2nd ed
 class CategoryFeed(LatestEntriesFeed):
-    def get_object(self, *args, **kwargs):
-        category_name = kwargs.get('category_name')
+    def get_object(self, request, category_name):
         if not category_name:
             raise ObjectDoesNotExist
         return Category.objects.get(slug__exact=category_name)
