@@ -1,5 +1,8 @@
+from django import forms
 from django.contrib import admin
+
 from coltrane.models import Category, Entry, Link
+
 
 class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = { 'slug': ['title'] }
@@ -7,8 +10,17 @@ class CategoryAdmin(admin.ModelAdmin):
 admin.site.register(Category, CategoryAdmin)
 
 
+class EntryAdminForm(forms.ModelForm):
+    class Meta:
+        model = Entry
+        widgets = {
+            'categories': forms.SelectMultiple(attrs={'size': 6})
+        }
+
+
 class EntryAdmin(admin.ModelAdmin):
     prepopulated_fields = { 'slug': ['title'] }
+    form = EntryAdminForm
 
     def queryset(self, request):
         # use objects manager, rather than the default one
@@ -19,6 +31,7 @@ class EntryAdmin(admin.ModelAdmin):
         if ordering:
             qs = qs.order_by(*ordering)
         return qs
+
 
 admin.site.register(Entry, EntryAdmin)
 
