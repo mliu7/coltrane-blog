@@ -15,15 +15,15 @@ current_site = Site.objects.get_current()
 class LatestEntriesFeed(Feed):
     author_name = "Mark Liu"
     #copyright = "http://%s/about/copyright/" % current_site.domain
-    description = "Latest entries posted to %s" % current_site.name
+    description = "Latest entries posted to Mark's Blog"
     description_template = "coltrane/feeds/latest_description.html"
-    subtitle = "Latest entries posted to %s" % current_site.name
+    subtitle = "Latest entries posted to Mark's Blog"
     feed_type = Rss201rev2Feed
     #item_copyright = "http://%s/about/copyright/" % current_site.domain
     item_author_name = "Mark Liu"
     item_author_link = "http://%s/" % current_site.domain
     link = "/feeds/latest/"
-    title = "%s: Latest entries" % current_site.name
+    title = "Mark Liu: Blog Posts"
     title_template = "coltrane/feeds/latest_title.html"
     
     def items(self):
@@ -71,7 +71,12 @@ class CategoryFeed(LatestEntriesFeed):
         return Category.objects.get(slug__exact=category_name)
     
     def title(self, obj):
-        return "%s: Latest entries in category '%s'" % (current_site.name, obj.title)
+        if obj.slug == 'technical':
+            return "Mark Liu: Technical Blog Posts"
+        elif obj.slug == 'non-technical':
+            return "Mark Liu: Non-Technical Blog Posts"
+        else:
+            return "%s: Latest entries in category '%s'" % (current_site.name, obj.title)
     
     def description(self, obj):
         return "%s: Latest entries in category '%s'" % (current_site.name, obj.title)
