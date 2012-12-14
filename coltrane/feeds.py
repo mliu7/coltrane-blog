@@ -27,7 +27,7 @@ class LatestEntriesFeed(Feed):
     title_template = "coltrane/feeds/latest_title.html"
     
     def items(self):
-        return Entry.live.all()[:15]
+        return Entry.live.all()
 
     def item_pubdate(self, item):
         return item.pub_date
@@ -51,7 +51,7 @@ class LatestLinksFeed(Feed):
     title = "%s: Latest links" % current_site.name
     
     def items(self):
-        return Link.objects.all()[:15]
+        return Link.objects.all()
     
     def item_pubdate(self, item): 
         return item.pub_date
@@ -85,4 +85,4 @@ class CategoryFeed(LatestEntriesFeed):
         return obj.get_absolute_url()
     
     def items(self, obj):
-        return obj.live_entry_set()[:15]
+        return obj.live_entry_set()
