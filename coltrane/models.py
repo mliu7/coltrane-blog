@@ -119,7 +119,6 @@ except tagging.AlreadyRegistered:
 class Link(models.Model):
     # Metadata.
     enable_comments = models.BooleanField(default=True)
-    post_elsewhere = models.BooleanField('Post to Delicious', default=True, help_text='If checked, this will be posted both to your weblog and to your delicious.com account. (Currently disabled)')
     posted_by = models.ForeignKey(User)
     pub_date = models.DateTimeField(default=datetime.datetime.now)
     slug = models.SlugField(unique_for_date='pub_date', help_text='Must be unique for the publication date.')
@@ -141,14 +140,6 @@ class Link(models.Model):
         return self.title
     
     def save(self):
-        if not self.id and self.post_elsewhere:
-            import pydelicious
-            from django.utils.encoding import smart_str
-            pydelicious.add(settings.DELICIOUS_USER, 
-                            settings.DELICIOUS_PASSWORD, 
-                            smart_str(self.url), 
-                            smart_str(self.title), 
-                            smart_str(self.tags))
         if self.description:
             self.description_html = markdown(self.description)
         super(Link, self).save()
